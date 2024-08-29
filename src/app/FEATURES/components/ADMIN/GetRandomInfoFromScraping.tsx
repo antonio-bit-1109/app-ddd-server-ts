@@ -1,23 +1,36 @@
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import { useLazyGetInfoFromScrapingQuery } from "../../../api/_APISLICES/bookApiSlice";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../api/store";
+import { useEffect } from "react";
 import {
-    resetIsErrorBoolean,
-    resetRandomDatiBook,
-    resetStatoError,
-    resetStatoPending,
-    resetStatoSuccess,
-    resetSuccessMsg,
-    salvaIsError,
-    salvaRandomDatiBook,
-    salvaStatoError,
-    salvaStatoPending,
-    salvaStatoSuccess,
-    salvaSuccessMsg,
-} from "../BOOK/bookSlice";
-import { handleErrorCases } from "../../../../helpers/narrowingErrorRTKQuery";
+    resetScrapingDataSlice,
+    salvaArrayData,
+    salvaErrorData,
+    salvaIsErrorStatus,
+    salvaIsLoadingStatus,
+    salvaIsSuccessStatus,
+} from "../SCRAPING_DATA/scrapingDataSlice";
+
+// import { useLazyGetInfoFromScrapingQuery } from "../../../api/_APISLICES/bookApiSlice";
+// import { useEffect } from "react";
+// import { useDispatch } from "react-redux";
+// import { AppDispatch } from "../../../api/store";
+// import {
+//     resetIsErrorBoolean,
+//     resetRandomDatiBook,
+//     resetStatoError,
+//     resetStatoPending,
+//     resetStatoSuccess,
+//     resetSuccessMsg,
+//     salvaIsError,
+//     salvaRandomDatiBook,
+//     salvaStatoError,
+//     salvaStatoPending,
+//     salvaStatoSuccess,
+//     salvaSuccessMsg,
+// } from "../BOOK/bookSlice";
+// import { handleErrorCases } from "../../../../helpers/narrowingErrorRTKQuery";
 // import { useEffect } from "react";
 // import { useDispatch } from "react-redux";
 // import { AppDispatch } from "../../../api/store";
@@ -36,42 +49,19 @@ const GetRandomInfoFromScraping = () => {
     const [trigger, { isLoading, isError, isSuccess, data, error }] = useLazyGetInfoFromScrapingQuery();
 
     useEffect(() => {
-        if (isSuccess || isError || isLoading) {
-            dispatch(resetStatoPending());
-            dispatch(resetStatoError());
-            dispatch(resetStatoSuccess());
+        dispatch(salvaIsLoadingStatus(isLoading));
+        dispatch(salvaIsErrorStatus(isError));
+        dispatch(salvaIsSuccessStatus(isSuccess));
+        if (data) {
+            dispatch(salvaArrayData(data.array));
         }
-
-        if (isLoading) {
-            dispatch(salvaStatoPending(isLoading));
-            return;
+        if (error) {
+            dispatch(salvaErrorData(error));
         }
-        if (isError && error) {
-            dispatch(resetStatoPending());
-            const errMsg = handleErrorCases(error);
-            dispatch(salvaStatoError(errMsg || "errore durante il recupero di dati randomici."));
-            dispatch(salvaIsError(isError));
-            return;
-        }
-        if (isSuccess && data) {
-            dispatch(resetStatoPending());
-            dispatch(salvaRandomDatiBook(data.array));
-            dispatch(salvaStatoSuccess(isSuccess));
-            dispatch(salvaSuccessMsg("dati randomici estratti con successo."));
-            return;
-        }
-
-        return () => {
-            dispatch(resetStatoPending());
-            dispatch(resetStatoError());
-            dispatch(resetRandomDatiBook());
-            dispatch(resetStatoSuccess());
-            dispatch(resetIsErrorBoolean());
-            dispatch(resetSuccessMsg());
-        };
-    }, [data, dispatch, error, isError, isLoading, isSuccess]);
+    }, [isLoading, isSuccess, isError, data, error, dispatch]);
 
     const getRandomInfo = () => {
+        dispatch(resetScrapingDataSlice());
         trigger();
     };
 

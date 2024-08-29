@@ -15,7 +15,7 @@ const EsitoFetchMsg = ({ isLoading, isSuccess, isError, data, error }: Iprops) =
 
     useEffect(() => {
         let id: number;
-        if ((isSuccess && data) || (isError && error)) {
+        if ((isSuccess && data) || isSuccess || (isError && error)) {
             setIsVisible(true);
             id = setTimeout(() => {
                 setIsVisible(false);
@@ -40,6 +40,16 @@ const EsitoFetchMsg = ({ isLoading, isSuccess, isError, data, error }: Iprops) =
         return (
             <div className=" flex flex-wrap shadow-orange-200 border-spacing-3 font-semibold text-center my-3 border-solid border-2 border-red-700 py-4 text-red-500 bg-red-200 rounded-md">
                 <p>{msgErr}</p>
+            </div>
+        );
+    }
+
+    if (isSuccess && isVisible && !data) {
+        const dataDefault = { message: "dati randomici caricati con successo." };
+
+        return (
+            <div className=" shadow-orange-200 border-spacing-3 font-semibold text-center my-3 border-solid border-2 border-green-700 py-4 text-green-500 bg-green-200  rounded-md">
+                <p>{dataDefault.message}</p>
             </div>
         );
     }

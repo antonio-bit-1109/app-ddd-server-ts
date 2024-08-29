@@ -1,34 +1,32 @@
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
-import GetRandomInfoFromScraping from "./GetRandomInfoFromScraping";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../api/store";
-import React, { useEffect, useState } from "react";
-import EsitoFetchMsg from "../GENERAL/EsitoFetchMsg";
+// import GetRandomInfoFromScraping from "./GetRandomInfoFromScraping";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../../api/store";
+import { useEffect, useState } from "react";
+// import EsitoFetchMsg from "../GENERAL/EsitoFetchMsg";
 import { IdataForm } from "../../../../interfaces/interfaces";
 import { useCreateBookMutation } from "../../../api/_APISLICES/bookApiSlice";
-// import { useLazyGetInfoFromScrapingQuery } from "../../../api/_APISLICES/bookApiSlice";
-// import EsitoFetchMsg from "../GENERAL/EsitoFetchMsg";
-// import { RootState } from "../../../api/store";
-// import { useSelector } from "react-redux";
-// import { useEffect, useState } from "react";
+import GetRandomInfoFromScraping from "./GetRandomInfoFromScraping";
+import { RootState } from "../../../api/store";
+import { useSelector } from "react-redux";
+import EsitoFetchMsg from "../GENERAL/EsitoFetchMsg";
 
 export function FormCreateNewBook() {
     const [createBook, { isLoading, isSuccess, isError, data, error }] = useCreateBookMutation();
 
     const {
-        arrayDatiRandom,
-        ErrMsgState,
-        isLoadingState,
-        isSuccessState,
-        isErrorBoolean,
-        message,
-        titoloRandom,
-        autoreRandom,
-        prezzoRandom,
-        numPagineRandom,
-        temaRandom,
-        isCopertinaRigidaRandom,
-    } = useSelector((store: RootState) => store.book);
+        randomArrayData,
+        isSuccessStatus,
+        isLoadingStatus,
+        isErrorStatus,
+        errorData,
+        titolo,
+        prezzo,
+        autore,
+        numPagine,
+        tema,
+        isCopertinaRigida,
+    } = useSelector((store: RootState) => store.scrapedData);
 
     const [dataForm, setdataForm] = useState<IdataForm>({
         titolo: null,
@@ -41,32 +39,25 @@ export function FormCreateNewBook() {
 
     useEffect(() => {
         if (
-            arrayDatiRandom &&
-            titoloRandom &&
-            prezzoRandom &&
-            autoreRandom &&
-            numPagineRandom &&
-            temaRandom &&
-            isCopertinaRigidaRandom
+            isSuccessStatus &&
+            randomArrayData &&
+            titolo &&
+            prezzo &&
+            autore &&
+            numPagine &&
+            tema &&
+            typeof isCopertinaRigida === "boolean"
         ) {
             setdataForm({
-                titolo: titoloRandom,
-                autore: autoreRandom,
-                prezzo: prezzoRandom,
-                numaPagine: numPagineRandom,
-                tematica: temaRandom,
-                isCopertinaRigida: isCopertinaRigidaRandom,
+                titolo: titolo,
+                autore: autore,
+                prezzo: prezzo,
+                numaPagine: numPagine,
+                tematica: tema,
+                isCopertinaRigida: isCopertinaRigida,
             });
         }
-    }, [
-        arrayDatiRandom,
-        titoloRandom,
-        prezzoRandom,
-        autoreRandom,
-        numPagineRandom,
-        temaRandom,
-        isCopertinaRigidaRandom,
-    ]);
+    }, [autore, isCopertinaRigida, isSuccessStatus, numPagine, prezzo, randomArrayData, tema, titolo]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -107,17 +98,12 @@ export function FormCreateNewBook() {
                 inserisci nuovo libro
             </Typography>
 
-            {isLoadingState ||
-                (isSuccessState && message) ||
-                (ErrMsgState && isErrorBoolean && (
-                    <EsitoFetchMsg
-                        isLoading={isLoadingState}
-                        isSuccess={isSuccessState}
-                        isError={isErrorBoolean}
-                        error={ErrMsgState}
-                        data={{ message }}
-                    />
-                ))}
+            <EsitoFetchMsg
+                isLoading={isLoadingStatus}
+                isSuccess={isSuccessStatus}
+                isError={isErrorStatus}
+                error={errorData}
+            />
 
             <form onSubmit={handleSubmit} className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
                 <div className="mb-1 flex flex-col gap-6">
@@ -225,12 +211,13 @@ export function FormCreateNewBook() {
                 <Button className="mt-6" fullWidth type="submit">
                     CREA
                 </Button>
-                {/* <Typography color="gray" className="mt-4 text-center font-normal">
-                    Already have an account?{" "}
-                    <a href="#" className="font-medium text-gray-900">
-                        Sign In
-                    </a>
-                </Typography> */}
+                <EsitoFetchMsg
+                    isLoading={isLoading}
+                    isSuccess={isSuccess}
+                    isError={isError}
+                    error={error}
+                    data={data}
+                />
             </form>
         </Card>
     );

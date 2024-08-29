@@ -5,3 +5,8 @@
 .color {
     fill: #263238;
 }
+
+.lineStyle {
+    text-decoration-line: line-through;
+    text-decoration-color: red;
+}

@@ -182,7 +182,7 @@ export default function NavBarComp() {
                         {roles && IsGuyAdmin(roles) && (
                             <div
                                 onClick={() => {
-                                    navigate("/Admin");
+                                    navigate("/Admin/Users");
                                 }}
                                 className="ms-5"
                             >

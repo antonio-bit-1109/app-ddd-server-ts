@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../api/store";
 import { ModalEditBookIsOpen, selectedBookEdit, setBookId_EditImg } from "./bookSlice";
 import { RiImageAddFill } from "react-icons/ri";
+import ScontoComponent from "./ScontoComponent";
 interface EcommerceCardProps {
     book: IBook;
     admin?: string;
@@ -41,7 +42,7 @@ export function EcommerceCard({ book, admin }: EcommerceCardProps) {
     };
 
     return (
-        <Card className={`${admin && "my-3"} w-96`}>
+        <Card className={`${admin && "my-3"} w-96 bg-indigo-200`}>
             <CardHeader shadow={false} floated={false} className="h-52 relative">
                 <Typography color="blue-gray" className=" font-bold py-4 text-lg flex justify-center">
                     {capitalLetters(book.NomeLibro)}
@@ -64,11 +65,6 @@ export function EcommerceCard({ book, admin }: EcommerceCardProps) {
                 />
             </CardHeader>
             <CardBody>
-                <div className="mb-2 flex items-center justify-between">
-                    <Typography color="blue-gray" className="font-medium">
-                        ${book.PrezzoLibro}
-                    </Typography>
-                </div>
                 <Typography variant="small" color="gray" className="font-normal opacity-75">
                     Autore: {book.Autore}
                 </Typography>{" "}
@@ -81,6 +77,11 @@ export function EcommerceCard({ book, admin }: EcommerceCardProps) {
                 <Typography variant="small" color="gray" className="font-medium opacity-75">
                     Pagine: {book.PagineLibro}
                 </Typography>
+                <div className="my-4 flex items-center justify-between">
+                    <Typography color="blue-gray" className="font-extrabold">
+                        <span className=" text-4xl">${<ScontoComponent value={book.PrezzoLibro} />}</span>
+                    </Typography>
+                </div>
             </CardBody>
             <CardFooter className="pt-0">
                 <Button

@@ -18,7 +18,7 @@ export function SideBar() {
             <List>
                 <ListItem
                     onClick={() => {
-                        navigate("/Admin");
+                        navigate("/Admin/Users");
                     }}
                 >
                     <ListItemPrefix>
@@ -62,6 +62,21 @@ export function SideBar() {
                     </div>
                 )}
 
+                {location.pathname.startsWith("/Admin/Users") && (
+                    <div
+                        onClick={() => {
+                            navigate("/Admin/Users/CreateUser");
+                        }}
+                        className="mt-28"
+                    >
+                        <ListItem>
+                            <ListItemPrefix>
+                                <LuBookCopy className="color" size={20} />
+                            </ListItemPrefix>
+                            Aggiungi nuovo utente
+                        </ListItem>
+                    </div>
+                )}
                 {/* <ListItem>
                     <ListItemPrefix>
                         <UserCircleIcon className="h-5 w-5" />

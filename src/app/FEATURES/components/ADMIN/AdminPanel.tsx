@@ -34,14 +34,19 @@ const AdminPanel = () => {
             <NavBarComp />
             <section className="flex">
                 <SideBar />
+
+                {/* il render viene modificato a pagina "intera" se la location rispecchia un certo path */}
                 <div
                     className={` bg-blue-gray-300 ${
-                        location.pathname === "/Admin/Books/CreateBook" ? "w-full" : "w-2/7"
+                        location.pathname === "/Admin/Books/CreateBook" ||
+                        location.pathname === "/Admin/Users/CreateUser"
+                            ? "w-full"
+                            : "w-2/7"
                     } h-[calc(100vh-64px)] overflow-y-scroll`}
                 >
                     <Outlet />
                 </div>
-                {location.pathname === "/Admin" && (
+                {location.pathname === "/Admin/Users" && (
                     <div className="flex-grow h-[calc(100vh-64px)] flex justify-center items-center ">
                         <FormEditUser />
                     </div>

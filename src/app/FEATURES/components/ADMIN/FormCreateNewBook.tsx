@@ -57,6 +57,17 @@ export function FormCreateNewBook() {
                 isCopertinaRigida: isCopertinaRigida,
             });
         }
+
+        return () => {
+            setdataForm({
+                titolo: null,
+                autore: null,
+                prezzo: null,
+                numaPagine: null,
+                tematica: null,
+                isCopertinaRigida: null,
+            });
+        };
     }, [autore, isCopertinaRigida, isSuccessStatus, numPagine, prezzo, randomArrayData, tema, titolo]);
 
     const handleSubmit = (e: React.FormEvent) => {

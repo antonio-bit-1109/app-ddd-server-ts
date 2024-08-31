@@ -7,6 +7,7 @@ import { bookApi } from "./_APISLICES/bookApiSlice";
 import { userApi } from "./_APISLICES/userApiSlice";
 import bookSlice from "../FEATURES/components/BOOK/bookSlice";
 import scrapingDataSlice from "../FEATURES/components/SCRAPING_DATA/scrapingDataSlice";
+import usersSlice from "../FEATURES/components/USER/usersSlice";
 
 const persistConfig = {
     key: "root",
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     token: tokenSlice,
     book: bookSlice,
     scrapedData: scrapingDataSlice,
+    users: usersSlice,
     [authApi.reducerPath]: authApi.reducer,
     [bookApi.reducerPath]: bookApi.reducer,
     [userApi.reducerPath]: userApi.reducer,

@@ -4,6 +4,7 @@ import { AppDispatch, RootState } from "../../../api/store";
 import { setToken } from "./tokenSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import EsitoFetchMsg from "../GENERAL/EsitoFetchMsg";
 
 interface IRtkQuery_response {
     isError: boolean;
@@ -29,20 +30,22 @@ const LoginResponse = ({ isError, isLoading, isSuccess, data, error }: IRtkQuery
         }
     }, [token, navigate, dispatch, isSuccess, data]);
 
-    if (isLoading) {
-        return <p>attendere...</p>;
-    }
+    // if (isLoading) {
+    //     return <p>attendere...</p>;
+    // }
 
-    if (isSuccess && data) {
-        return <p>login effettuato con successo!</p>;
-    }
+    // if (isSuccess && data) {
+    //     return <p>login effettuato con successo!</p>;
+    // }
 
-    if (isError && error) {
-        return <p>errore! sistema i casi di errore</p>;
-    }
+    // if (isError && error) {
+    //     return <p>errore! sistema i casi di errore</p>;
+    // }
 
-    return null;
+    // return null;
     //  return <div className="font-serif">LoginResponse</div>;
+
+    return <EsitoFetchMsg isLoading={isLoading} isError={isError} isSuccess={isSuccess} error={error} />;
 };
 
 export default LoginResponse;

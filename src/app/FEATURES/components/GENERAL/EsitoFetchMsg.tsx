@@ -38,8 +38,8 @@ const EsitoFetchMsg = ({ isLoading, isSuccess, isError, data, error }: Iprops) =
     if (isError && error && isVisible) {
         const msgErr = handleErrorCases(error);
         return (
-            <div className=" flex flex-wrap shadow-orange-200 border-spacing-3 font-semibold text-center my-3 border-solid border-2 border-red-700 py-4 text-red-500 bg-red-200 rounded-md">
-                <p>{msgErr}</p>
+            <div className=" flex justify-center flex-wrap shadow-orange-200 border-spacing-3 font-semibold text-center my-3 border-solid border-2 border-red-700 py-4 text-red-500 bg-red-200 rounded-md">
+                <p className="text-center">{msgErr}</p>
             </div>
         );
     }

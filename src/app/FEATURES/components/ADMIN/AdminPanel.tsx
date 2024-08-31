@@ -65,6 +65,8 @@ const AdminPanel = () => {
                 title="Nuova Immagine Libro"
                 text="carica la nuova immagine per il libro"
                 FETCH="editImgBook"
+                INPUT="file"
+                labelString="carica nuova immagine"
             />
         </>
     );

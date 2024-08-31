@@ -75,3 +75,10 @@ export interface IdataForm {
 //     tematica: string;
 //     isCopertinaRigida: boolean;
 // }
+
+export interface IdataCreateUser {
+    email: string;
+    nomeUtente: string;
+    cognome: string;
+    password: string;
+}

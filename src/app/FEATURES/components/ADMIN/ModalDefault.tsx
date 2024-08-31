@@ -6,18 +6,21 @@ import { Input } from "@material-tailwind/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useEditBookImageMutation } from "../../../api/_APISLICES/bookApiSlice";
 import EsitoFetchMsg from "../GENERAL/EsitoFetchMsg";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../api/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../api/store";
+import { useResetPasswordMutation } from "../../../api/_APISLICES/userApiSlice";
+import { isResendPswHasBeenSend } from "../USER/usersSlice";
 
 interface IProps {
     state: boolean;
     title: string;
     text: string;
     setter: (state: boolean) => void;
-    resetStateSetter: (state: string | null) => void;
-    resetStateValue: string | null;
-    FETCH: string;
-    // RTKQUERY_FETCH: QueryDefinition<any, BaseQueryFn, any, any>;
+    resetStateSetter?: (state: string | null) => void;
+    resetStateValue?: string | null;
+    FETCH: "editImgBook" | "resetPasswordUser";
+    INPUT: string;
+    labelString: string;
 }
 
 export function ModalDefault({
@@ -28,10 +31,34 @@ export function ModalDefault({
     title,
     text,
     FETCH,
+    INPUT,
+    labelString,
 }: // RTKQUERY_FETCH,
 IProps) {
-    const [editImg, { isSuccess, isLoading, isError, error, data, reset }] = useEditBookImageMutation();
-    const [image, setImage] = useState<File | null>(null);
+    const dispatch: AppDispatch = useDispatch();
+    //chiama sempre tutti i metodi di RTKquery che fanno la fetch
+    const [editImgBook_Method, editImageResponse] = useEditBookImageMutation();
+    const [sendEmailToResetPsw_Method, SendEmailResponse] = useResetPasswordMutation();
+
+    // Crea una mappa di funzioni con il nomi delle proprietà uguali ai possibili valori di FETCH
+    const fetchMethods = {
+        editImgBook: editImgBook_Method,
+        resetPasswordUser: sendEmailToResetPsw_Method,
+        // Aggiungi altri metodi qui in futuro
+    };
+
+    const fetchStates = {
+        editImgBook: editImageResponse,
+        resetPasswordUser: SendEmailResponse,
+        // Aggiungi altri stati qui in futuro
+    };
+
+    const fetchMethod = fetchMethods[FETCH];
+    const FetchResponse = fetchStates[FETCH];
+
+    const { isSuccess, isLoading, isError, error, data, reset } = FetchResponse;
+
+    const [dataToSend, setDataToSend] = useState<File | null | string>(null);
     const { bookId_edit_img } = useSelector((store: RootState) => store.book);
     const handleOpen = (extraAction?: boolean) => {
         setter(!state);
@@ -42,7 +69,11 @@ IProps) {
     };
 
     const resetIdBook = useCallback(() => {
-        resetStateSetter(resetStateValue);
+        if (resetStateSetter && resetStateValue) {
+            resetStateSetter(resetStateValue);
+            return;
+        }
+        return null;
     }, [resetStateSetter, resetStateValue]);
 
     useEffect(() => {
@@ -58,56 +89,63 @@ IProps) {
             id = setTimeout(() => {
                 reset();
             }, 2500);
-            // id1 = setTimeout(() => {
-            //     setter(false);
-            // }, 2000);
         }
 
         if (isSuccess && data) {
             id1 = setTimeout(() => {
                 setter(false);
             }, 2000);
+
+            if (FETCH === "resetPasswordUser") {
+                dispatch(isResendPswHasBeenSend(true));
+            }
             return;
         }
 
         return () => {
-            setImage(null);
+            setDataToSend(null);
             clearTimeout(id);
             clearTimeout(id1);
         };
-    }, [resetIdBook, state, isError, error, isSuccess, data, setter, reset]);
+    }, [resetIdBook, state, isError, error, isSuccess, data, setter, reset, dispatch, FETCH]);
 
-    const handleFileImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setImage(e.target.files[0]);
-        } else {
-            console.error("nessun immagine caricata");
-        }
-    };
-
-    const sendImage = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("sono qui");
-        const myFormData = new FormData();
-        if (image && bookId_edit_img) {
-            myFormData.append("imageFile", image);
-            myFormData.append("bookId", bookId_edit_img);
-            chooseFetch(FETCH, myFormData);
-            // editImg({ file: myFormData });
-        } else {
-            console.log("sono qui");
+    const handleData = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (FETCH === "editImgBook") {
+            if (e.target.files && e.target.files[0]) {
+                setDataToSend(e.target.files[0]);
+            } else {
+                console.error("nessun immagine caricata");
+            }
             return;
         }
+
+        if (FETCH === "resetPasswordUser") {
+            e.preventDefault();
+            setDataToSend(e.target.value);
+        } else {
+            console.error("nessun email caricata");
+        }
+        return;
     };
 
-    const chooseFetch = (fetchname: string, data: FormData) => {
-        switch (fetchname) {
-            case "editImgBook":
-                editImg({ file: data });
-                break;
-
-            default:
-                break;
+    const sendDataToServer = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("sono qui");
+        if ((dataToSend as File) && bookId_edit_img && fetchMethod === editImgBook_Method) {
+            const myFormData = new FormData();
+            console.log("sto inviando l'immagine");
+            myFormData.append("imageFile", dataToSend as File);
+            myFormData.append("bookId", bookId_edit_img);
+            fetchMethod({ file: myFormData });
+            return;
+        }
+        if (dataToSend && typeof dataToSend === "string" && fetchMethod === sendEmailToResetPsw_Method) {
+            console.log("sto inviando l'email");
+            fetchMethod({ email: dataToSend });
+            return;
+        } else {
+            console.log("non sono ne nel caso in cui invio una mail ne nel caso dove invio il file immagine.");
+            return;
         }
     };
 
@@ -121,7 +159,7 @@ IProps) {
             <form
                 action="POST"
                 onSubmit={(e) => {
-                    sendImage(e);
+                    sendDataToServer(e);
                 }}
             >
                 <DialogHeader>{title}</DialogHeader>
@@ -138,12 +176,11 @@ IProps) {
                     ) : (
                         <div className="flex w-72 flex-col items-end gap-6">
                             <Input
-                                type="file"
+                                type={INPUT}
                                 size="lg"
-                                label="carica immagine"
+                                label={labelString}
                                 crossOrigin={undefined}
-                                onChange={handleFileImage}
-                                // icon={<BsImageFill />}
+                                onChange={handleData}
                             />
                         </div>
                     )}

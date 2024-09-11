@@ -150,7 +150,7 @@ export default function LoginComp() {
             <ModalDefault
                 state={isModalForgotPswVisible}
                 setter={handleVIsibilityModal}
-                title="ottieni nuovamente la password"
+                title="reimposta la password"
                 text="inserisci la tua mail e riceverai un messaggio contenente le istruzioni per reimpostare la password."
                 FETCH="resetPasswordUser"
                 INPUT="email"

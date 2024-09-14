@@ -1,3 +1,4 @@
+import { Variables } from "./enum_book";
 import URLbuilder from "./URLBuilder";
 
 // const urlBuilder = new URLbuilder("localhost:3500", "book", ["dummyFetch", "dummy"]);
@@ -8,11 +9,16 @@ import URLbuilder from "./URLBuilder";
 // }
 export const dummyFetch = async () => {
     try {
-        const urlBuilder = new URLbuilder("localhost:3500", "book", ["dummyFetch", "dummy"], {
-            key1: "v1",
-            key2: "v2",
-            key3: "v3",
-        });
+        const urlBuilder = new URLbuilder(
+            Variables.BaseUrl,
+            Variables.mainPath_Book,
+            [Variables.additionalPath_Book_1, Variables.additionalPath_Book_2],
+            {
+                key1: "v1",
+                key2: "v2",
+                key3: "v3",
+            }
+        );
         urlBuilder.startBuilderPipeLine();
         const FinalUrl = urlBuilder.GetFinalURL();
 

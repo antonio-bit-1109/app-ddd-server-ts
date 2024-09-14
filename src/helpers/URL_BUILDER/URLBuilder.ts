@@ -3,13 +3,9 @@ class URLbuilder {
     // http://localhost:3500/book/scrapingRandomInfo
 
     private BaseURL: string; //percorso principale, localhost o simili
-
     private MainPath: string; // elemento facente parte del dominio in quasi tutti i casi : (User, Book , auth)
-
     private AdditionalPath: string[]; // elemento che segue la stringa che identifica l'elemento di dominio
-
     private QueryParam?: { [key: string]: string }; // eventuale query param aggiuntivo dell URL
-
     private URL: string[];
 
     constructor(

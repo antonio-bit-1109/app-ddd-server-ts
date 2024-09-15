@@ -39,7 +39,7 @@ class URLbuilder {
     public GetFinalURL() {
         try {
             if (Array.isArray(this.URL) && this.URL.length > 0) {
-                console.log(this.URL.join(""));
+                //console.log(this.URL.join(""));
                 return this.URL.join("");
                 // return this.URL[0];
             }

@@ -9,6 +9,7 @@ import CreateNewBook from "./app/FEATURES/components/ADMIN/CreateNewBook";
 import CreateNewUser from "./app/FEATURES/components/ADMIN/CreateNewUser";
 import RegisterComp from "./app/FEATURES/components/AUTH/RegisterComponent";
 import LandingPage from "./app/FEATURES/components/AUTH/LandingPage";
+import { ResetUserPsw_page } from "./app/FEATURES/components/USER/ResetUserPsw_page";
 
 const App = () => {
     return (
@@ -35,6 +36,8 @@ const App = () => {
                         <Route index element={<GetAllBook admin={"ADMIN"} />} />
                         <Route path="CreateBook" element={<CreateNewBook />} />
                     </Route>
+
+                    <Route path="/resetPassword" element={<ResetUserPsw_page />} />
                 </Routes>
             </BrowserRouter>
         </div>

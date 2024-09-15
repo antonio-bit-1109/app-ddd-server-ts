@@ -64,7 +64,6 @@ class URLbuilder {
         }
     }
 
-    // gestire i casi di aggiunta dell extra path qualcosa fosse presente / non presente il query param e se gli extra path sono piu di uno
     private addExtraPath(additionalPath: string[]) {
         try {
             additionalPath.forEach((elem, i) => {

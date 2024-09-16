@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 // import { localHostPath } from "../../../helpers/localHost";
 import { /* baseQuery, */ baseQueryWithRefreshToken } from "../../../helpers/BaseQueries";
-import { IdataCreateUser, IUser } from "../../../interfaces/interfaces";
+import { IdataCreateUser, IdataResetPassword, IUser } from "../../../interfaces/interfaces";
 // import { IBook } from "../../../interfaces/interfaces";
 
 // builder.query/mutation< RISPOSTA DELL API IN CASO DI SUCCESSO  ,   PARAMETRO che si aspetta la query/fetch   >
@@ -34,6 +34,14 @@ export const userApi = createApi({
                 body: { email: data.email },
             }),
         }),
+
+        SendNewPassword: builder.mutation<{ message: string }, IdataResetPassword>({
+            query: (data) => ({
+                url: "/users/setNewPassword",
+                method: "POST",
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -43,3 +51,6 @@ export const useLazyGetAllUsersQuery: typeof userApi.endpoints.getAllUsers.useLa
 export const useSubscribeMutation: typeof userApi.endpoints.subscribe.useMutation = userApi.useSubscribeMutation;
 export const useResetPasswordMutation: typeof userApi.endpoints.resetPassword.useMutation =
     userApi.useResetPasswordMutation;
+
+export const useSendNewPasswordMutation: typeof userApi.endpoints.SendNewPassword.useMutation =
+    userApi.useSendNewPasswordMutation;

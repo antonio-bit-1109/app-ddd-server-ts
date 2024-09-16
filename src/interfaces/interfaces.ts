@@ -82,3 +82,8 @@ export interface IdataCreateUser {
     cognome: string;
     password: string;
 }
+
+export interface IdataResetPassword {
+    password: string;
+    idUser: string;
+}
